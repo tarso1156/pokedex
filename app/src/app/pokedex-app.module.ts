@@ -4,7 +4,7 @@ import { RouterModule } from "@angular/router";
 
 import { routes } from './pokedex-app.routes';
 import { PokedexAppComponent } from "./pokedex-app.component";
-import { PokemonService } from "./pokemon/pokemon.service";
+import { PokemonService } from "./shared/pokemon.service";
 
 @NgModule({
   imports: [
