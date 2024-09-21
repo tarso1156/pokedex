@@ -37,4 +37,14 @@ export class PokemonController {
         );
     }
 
+    @Get(':name/details')
+    @CacheTTL(PokemonController.TEN_MINUTES_IN_MS)
+    details(@Param('name') name: string) {
+        return this.pokemonService.getDetails(name).pipe(
+            catchError((e: AxiosError) => {
+                throw new HttpException((e.response?.data as string), e.status || 500)
+            })
+        );
+    }
+
 }

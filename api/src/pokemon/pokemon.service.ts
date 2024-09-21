@@ -37,4 +37,16 @@ export class PokemonService {
             ))
         );
     }
+
+    getDetails(name: string) {
+        return this.httpService.get<any>(`${this.API_URL}/pokemon/${name.toLocaleLowerCase()}`).pipe(
+            map(({ data: { abilities, types, stats } }) => (
+                {
+                    abilities: abilities?.map(({ ability: { name } }) => (name)),
+                    types: types?.map(({ type: { name } }) => (name)),
+                    stats: stats?.map(({ base_stat, stat: { name }}) => ({ name, value: base_stat }))
+                }
+            ))
+        );
+    }
 }
