@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './pokedex-app.routes';
 import { PokedexAppComponent } from "./pokedex-app.component";
@@ -13,6 +14,7 @@ import { PokemonService } from "./shared/pokemon.service";
   ],
   providers: [
     PokemonService,
+    provideHttpClient()
   ],
   declarations: [
     PokedexAppComponent,

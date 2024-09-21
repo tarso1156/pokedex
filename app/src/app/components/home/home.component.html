@@ -1,12 +1,31 @@
-<section class="flex flex-row justify-content-center">
-  <h1>POKEDEX</h1>
-</section>
-<section class="mx-5 flex flex-row align-items-center justify-content-center">
-  <p-inputGroup>
-    <input type="text" pInputText placeholder="Search Pokemon by name"/>
-    <button type="button" pButton label="Search"></button>
-  </p-inputGroup>
-</section>
-
-
-
+<div>
+  <section class="flex flex-row justify-content-center">
+    <h1>POKEDEX</h1>
+  </section>
+  <section class="mx-5 flex flex-row align-items-center justify-content-center">
+    <input type="text" pInputText class="w-full" placeholder="Search Pokemon by name" [(ngModel)]="search.term"
+      (input)="searchPokemonByName()"/>
+    <i class="pi pi-spin pi-spinner absolute" style="right: 3rem" *ngIf="search.loading"></i>
+  </section>
+  <section class="grid m-5 gap-3 justify-content-center">
+    @for (pokemon of pokemons; track $index) {
+    <div class="flex justify-content-center">
+      <p-card [style]="{width:'200px',textAlign:'center'}">
+        <ng-template pTemplate="header">
+          <img alt="Card" [src]="pokemon.sprite_url" />
+          <div>
+            <b>{{ pokemon.name | titlecase }}</b>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <p-button label="Details" styleClass="w-full" />
+        </ng-template>
+      </p-card>
+    </div>
+    }
+  </section>
+  <section class="p-5 pb-8 flex align-items-center justify-content-center">
+    <p-button label="Load more Pokémons..." *ngIf="!search.loading && !search.term"
+      ></p-button>
+  </section>
+</div>
