@@ -61,8 +61,11 @@
       </div>
     }
   </section>
-  <section class="p-5 pb-8 flex align-items-center justify-content-center">
+  <section class="p-5 pb-5 flex align-items-center justify-content-center">
     <p-button label="Load more Pokémons..." *ngIf="!search.term && pokemons?.length" (onClick)="loadMorePokemons()"
       [icon]="search.loading ? 'pi pi-spin pi-spinner' : ''"></p-button>
+  </section>
+  <section class="p-2 flex justify-content-center">
+    Developed by&nbsp;<a href="https://github.com/tarso1156/pokedex">tarso&#64;pokerepo</a>
   </section>
 </div>
