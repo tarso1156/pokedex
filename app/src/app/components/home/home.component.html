@@ -4,28 +4,65 @@
   </section>
   <section class="mx-5 flex flex-row align-items-center justify-content-center">
     <input type="text" pInputText class="w-full" placeholder="Search Pokemon by name" [(ngModel)]="search.term"
-      (input)="searchPokemonByName()"/>
+      (input)="searchPokemonByName()" />
     <i class="pi pi-spin pi-spinner absolute" style="right: 3rem" *ngIf="search.loading"></i>
+    <i class="pi pi-times absolute cursor-pointer" style="right: 3rem" *ngIf="search.term && !search.loading"
+      (click)="clearSearch()" pTooltip="Clear search" tooltipPosition="left"></i>
   </section>
   <section class="grid m-5 gap-3 justify-content-center">
     @for (pokemon of pokemons; track $index) {
-    <div class="flex justify-content-center">
-      <p-card [style]="{width:'200px',textAlign:'center'}">
-        <ng-template pTemplate="header">
-          <img alt="Card" [src]="pokemon.sprite_url" />
-          <div>
-            <b>{{ pokemon.name | titlecase }}</b>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-          <p-button label="Details" styleClass="w-full" />
-        </ng-template>
-      </p-card>
-    </div>
+      @if (!pokemon.details) {
+        <p-card styleClass="text-center" [style]="{width:'200px',height: '326px'}">
+          <ng-template pTemplate="header">
+            <img alt="Card" [src]="pokemon.sprite_url" />
+            <div>
+              <b>{{ pokemon.name | titlecase }}</b>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <p-button label="Details" styleClass="w-full" (onClick)="fetchPokemonDetails(pokemon)" />
+          </ng-template>
+        </p-card>
+      }
+
+      @if (pokemon.details) {
+        <p-card styleClass="text-center" [style]="{width:'200px',height: '326px'}" subheader="Details">
+          <ng-template pTemplate="header">
+            <div>
+              <b>{{ pokemon.name | titlecase }}</b>
+            </div>
+          </ng-template>
+          <p-table [value]="pokemon.details.stats" styleClass="p-datatable-sm" [style]="{fontSize:'8px'}">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Stat</th>
+                <th>Value</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-stat>
+              <tr>
+                <td>{{ stat.name }}</td>
+                <td>{{ stat.value }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <ng-template pTemplate="footer">
+            <p-button label="Back" styleClass="w-full" (onClick)="clearPokemonDetails(pokemon)" />
+          </ng-template>
+        </p-card>
+      }
+    }
+    @if (!pokemons.length && search.term) {
+      <div>
+        <p-message severity="warn" [text]="'No pokémon has been found with the name ' + search.term + '!'"></p-message>
+        <br><br>
+        <p-message severity="info"
+          text="You can try one of the following names: bulbasaur, charmander, caterpie"></p-message>
+      </div>
     }
   </section>
   <section class="p-5 pb-8 flex align-items-center justify-content-center">
-    <p-button label="Load more Pokémons..." *ngIf="!search.loading && !search.term"
-      ></p-button>
+    <p-button label="Load more Pokémons..." *ngIf="!search.term && pokemons?.length" (onClick)="loadMorePokemons()"
+      [icon]="search.loading ? 'pi pi-spin pi-spinner' : ''"></p-button>
   </section>
 </div>

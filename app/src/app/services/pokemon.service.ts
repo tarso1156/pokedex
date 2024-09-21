@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Pokemon } from '../models/pokemon.model';
 
 import { environment } from '../../environments/environment.development';
+import { PokemonDetails } from '../models/pokemon-details.model';
 
 @Injectable()
 export class PokemonService {
@@ -25,4 +26,7 @@ export class PokemonService {
     return this.httpClient.get<Pokemon>(`${this.API_URL}/${searchTerm}`);
   }
 
+  fetchDetails(pokemon: Pokemon): Observable<PokemonDetails> {
+    return this.httpClient.get<PokemonDetails>(`${this.API_URL}/${pokemon.name}/details`);
+  }
 }

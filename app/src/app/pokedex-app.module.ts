@@ -5,7 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './pokedex-app.routes';
 import { PokedexAppComponent } from "./pokedex-app.component";
-import { PokemonService } from "./shared/pokemon.service";
+import { PokemonService } from "./services/pokemon.service";
 
 @NgModule({
   imports: [

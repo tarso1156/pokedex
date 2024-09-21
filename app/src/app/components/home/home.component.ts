@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { AsyncPipe, CommonModule, TitleCasePipe } from '@angular/common';
+import { HttpStatusCode } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { catchError, debounceTime, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
 
 import { Pokemon } from '../../models/pokemon.model';
 
-import { PokemonService } from '../../shared/pokemon.service';
+import { PokemonService } from '../../services/pokemon.service';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { CardModule } from 'primeng/card';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +29,10 @@ import { CardModule } from 'primeng/card';
     InputTextModule,
     InputGroupModule,
     InputGroupAddonModule,
-    CardModule
+    CardModule,
+    TooltipModule,
+    MessageModule,
+    TableModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -43,8 +50,7 @@ export class HomeComponent implements OnInit {
 
   pokemons$ = new Observable<Pokemon[]>();
   pokemonsSearch$ = new Subject<string>();
-  pokemons!: Pokemon[];
-  searchPokemonByName$ = new Subject<string>();
+  pokemons: Pokemon[] = [];
 
   constructor(private readonly pokemonService: PokemonService) { }
 
@@ -60,9 +66,10 @@ export class HomeComponent implements OnInit {
       switchMap(() => (
         this.search.term ?
           this.pokemonService.fetchByName(this.search.term).pipe(
+            tap(_ => this.search.page = 1),
             map(poke => this.pokemons = [poke]),
             catchError((e) => {
-              if (e.error.statusCode === 404) {
+              if (e.error.statusCode === HttpStatusCode.NotFound) {
                 this.pokemons = [];
               }
               return of(this.pokemons);
@@ -72,7 +79,10 @@ export class HomeComponent implements OnInit {
             map(pokes => this.pokemons = pokes)
           )
       )),
-      tap(_ => this.search.loading = false),
+      tap(_ => {
+        this.search.loading = false;
+        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+      }),
     ).subscribe();
   }
 
@@ -82,6 +92,23 @@ export class HomeComponent implements OnInit {
 
   loadMorePokemons() {
     this.search.page++;
+    this.pokemonsSearch$.next('');
+  }
+
+  clearSearch() {
+    this.pokemons = [];
+    this.search.term = '';
+    this.pokemonsSearch$.next('');
+  }
+
+  fetchPokemonDetails(pokemon: Pokemon) {
+    this.pokemonService.fetchDetails(pokemon).subscribe(details => {
+      pokemon.details = details
+    });
+  }
+
+  clearPokemonDetails(pokemon: Pokemon) {
+    pokemon.details = undefined;
   }
 
 }
