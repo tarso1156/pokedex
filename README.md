@@ -7,6 +7,8 @@ Pokémon indexing app
 
 ## Setup to start the app and api
 1. Clone the repository
+2. ```cd``` into the repository
+3. Run ```cd api && npm i && cd ../app && npm i```
 2. Run ```docker compose up -d```
 
 This should start both the app and the api
