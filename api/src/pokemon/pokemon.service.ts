@@ -5,7 +5,7 @@ import { map } from 'rxjs';
 @Injectable()
 export class PokemonService {
 
-    private readonly API_URL = process.env.POKEDEX_API_URL;
+    private readonly API_URL = 'https://pokeapi.co/api/v2';
     private readonly SPRITES_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
 
     constructor(
